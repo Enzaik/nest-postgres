@@ -7,7 +7,7 @@ import { Task, TaskStatus } from './task.model';
 export class TasksService {
   private tasks: Array<Task> = [
     {
-      id: 1,
+      id: '1',
       title: 'Test task',
       description: 'This is a test task',
       status: TaskStatus.OPEN,
@@ -28,5 +28,9 @@ export class TasksService {
     };
     this.tasks.push(task);
     return task;
+  }
+
+  getTaskById(id: string): Task {
+    return this.tasks.find((task) => task.id === id);
   }
 }
