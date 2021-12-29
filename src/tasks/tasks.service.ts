@@ -1,9 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { TasksRepository } from './dto/tasks.repository';
+import { Task } from './task.entity';
 
 @Injectable()
 export class TasksService {
+  constructor(
+    @InjectRepository(TasksRepository)
+    private tasksRepository: TasksRepository,
+  ) {}
+
   // private tasks: Array<Task> = [
   //   {
   //     id: '1',
@@ -40,6 +48,7 @@ export class TasksService {
   //   this.tasks.push(task);
   //   return task;
   // }
+
   // getTaskById(id: string): Task {
   //   const task = this.tasks.find((task) => task.id === id);
   //   if (!task) {
@@ -47,6 +56,14 @@ export class TasksService {
   //   }
   //   return task;
   // }
+  async getTaskById(id: string): Promise<Task> {
+    const found = await this.tasksRepository.findOne(id);
+    if (!found) {
+      throw new NotFoundException(`Task with id "${id}" not found`);
+    }
+    return found;
+  }
+
   // deleteTask(id: string): string {
   //   const found = this.getTaskById(id);
   //   if (!found) {
