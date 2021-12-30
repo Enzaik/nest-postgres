@@ -22,9 +22,10 @@ export class TasksRepository extends Repository<Task> {
     return task;
   }
 
-  async getTasks(filterDto: GetTasksFilterDto) {
+  async getTasks(filterDto: GetTasksFilterDto, user: User) {
     const { status, search } = filterDto;
     const query = this.createQueryBuilder('task'); // task entity query
+    query.where({ user });
     if (status) {
       query.andWhere('task.status = :status', { status });
     }
