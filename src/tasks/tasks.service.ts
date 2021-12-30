@@ -22,12 +22,8 @@ export class TasksService {
     return await this.tasksRepository.find();
   }
 
-  async getTaskById(id: string): Promise<Task> {
-    const found = await this.tasksRepository.findOne(id);
-    if (!found) {
-      throw new NotFoundException(`Task with id "${id}" not found`);
-    }
-    return found;
+  async getTaskById(id: string, user: User): Promise<Task> {
+    return await this.tasksRepository.getTaskById(id, user);
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
@@ -43,8 +39,12 @@ export class TasksService {
     return id;
   }
 
-  async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
-    const task = await this.getTaskById(id);
+  async updateTaskStatus(
+    id: string,
+    status: TaskStatus,
+    user: User,
+  ): Promise<Task> {
+    const task = await this.getTaskById(id, user);
     task.status = status;
     await this.tasksRepository.save(task);
     return task;
