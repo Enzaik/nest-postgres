@@ -40,17 +40,4 @@ export class TasksRepository extends Repository<Task> {
 
     return tasks;
   }
-
-  async getTaskById(id: string, user: User): Promise<Task> {
-    console.log('here');
-
-    const query = this.createQueryBuilder('task');
-    query.where({ user });
-    query.andWhere('task.id = :id', { id });
-    const task = await query.getOne();
-    if (!task) {
-      throw new NotFoundException('Task not found');
-    }
-    return task;
-  }
 }
